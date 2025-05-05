@@ -1,0 +1,22 @@
+<header id="header" class="header d-flex align-items-center fixed-top">
+    <div
+        class="header-container container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+        <a href="{% url 'index' %}" class="logo d-flex align-items-center me-auto me-xl-0">
+            <h1 class="sitename">iLanding</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+            <ul>
+                <li><a href="{% url 'index' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+                <li><a href="{% url 'about-us' %}" class="{% if request.path == '/about-us/' %}active{% endif %}">About</a></li>
+                <li><a href="{% url 'features' %}" class="{% if request.path == '/features/' %}active{% endif %}">Features</a></li>
+                <li><a href="{% url 'contact-us' %}" class="{% if request.path == '/contact-us/' %}active{% endif %}">Contact</a></li>
+            </ul>
+            <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+        <a class="btn-getstarted" href="{% url 'contact-us' %}">Get Started</a>
+
+    </div>
+</header>

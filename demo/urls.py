@@ -18,8 +18,11 @@ from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TemplateView.as_view(template_name='index.html'), name='index'),
-    path('about-us/', TemplateView.as_view(template_name='about.html'), name='about-us'),
+    path('', TemplateView.as_view(template_name='index.html'), {'title': 'iLanding'}, name='index'),
+    path('about-us/', TemplateView.as_view(template_name='about.html'),  {'title': 'About | iLanding'},name='about-us'),
+    path('features/', TemplateView.as_view(template_name='features.html'), {'title': 'Features | iLanding'}, name='features'),
+    path('contact-us/', TemplateView.as_view(template_name='contact-us.html'),  {'title': 'Contact | iLanding'},name='contact-us'),
 ]
