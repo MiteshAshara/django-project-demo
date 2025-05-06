@@ -1,0 +1,10 @@
+image list : docker image list 
+make a requirements.text file : pip freeze > requirements.txt
+build a docker insatnce : docker build -t <name> .
+run docker insatnce : 
+docker compose build
+docker compose up
+clear all cache : docker builder prune -f
+remove all images : docker rmi -f $(docker images -a -q)
+stop docker insatnce : docker-compose stop
+view insatnce is running or not: docker ps 
