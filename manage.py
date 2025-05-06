@@ -19,4 +19,7 @@ def main():
 
 
 if __name__ == '__main__':
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'demo.settings')
+    # Bind to 0.0.0.0 to allow external access in Docker
+    os.environ.setdefault('DJANGO_RUNSERVER_BIND', '0.0.0.0:8000')
     main()
