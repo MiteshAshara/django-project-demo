@@ -8,3 +8,18 @@ clear all cache : docker builder prune -f
 remove all images : docker rmi -f $(docker images -a -q)
 stop docker insatnce : docker-compose stop
 view insatnce is running or not: docker ps 
+
+# Stop all running containers
+docker stop $(docker ps -q)
+
+# Remove all containers
+docker rm -f $(docker ps -aq)
+
+# Remove all images
+docker rmi -f $(docker images -aq)
+
+# Remove all build cache
+docker builder prune -f
+
+# (Optional) Remove all unused data, including volumes
+docker system prune -a --volumes -f
