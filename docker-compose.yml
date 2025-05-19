@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-<<<<<<< HEAD
   django-app:
     build:
       context: .
@@ -12,9 +11,12 @@ services:
       - DEBUG=1
       - SECRET_KEY=django-insecure-1lgw@@(w3a98yz41wb#^*@0!jo1!qjcl0)63rls^&ogojb9w1^
       - ALLOWED_HOSTS=localhost,127.0.0.1,*
-      # Use SQLite instead of MySQL for simplicity
-      - DB_ENGINE=django.db.backends.sqlite3
-      - DB_NAME=db.sqlite3
+      - DB_ENGINE=django.db.backends.mysql
+      - DB_NAME=djangodb
+      - DB_USER=djangouser
+      - DB_PASSWORD=djangopass
+      - DB_HOST=mysql
+      - DB_PORT=3306
     volumes:
       - .:/app
     command: >
@@ -23,6 +25,44 @@ services:
         python create_superuser.py &&
         python manage.py runserver 0.0.0.0:8000
       "
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin:5.2.1
+    restart: always
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD=rootpass
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      - MYSQL_DATABASE=djangodb
+      - MYSQL_USER=djangouser
+      - MYSQL_PASSWORD=djangopass
+      - MYSQL_ROOT_PASSWORD=rootpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
 
 networks:
   app-network:
@@ -30,15 +70,3 @@ networks:
 
 volumes:
   db_data:
-=======
-  web:
-    build: .
-    ports:
-      - "8000:8000"
-    volumes:
-      - .:/app
-    environment:
-      - DEBUG=1
-      - SECRET_KEY=your-secret-key
-    command: python manage.py runserver 0.0.0.0:8000
->>>>>>> 21e99be94c5c928088a88799f4e286fa8e77dec1
