@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+<<<<<<< HEAD
   django-app:
     build:
       context: .
@@ -29,3 +30,15 @@ networks:
 
 volumes:
   db_data:
+=======
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=your-secret-key
+    command: python manage.py runserver 0.0.0.0:8000
+>>>>>>> 21e99be94c5c928088a88799f4e286fa8e77dec1
