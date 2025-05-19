@@ -8,10 +8,11 @@
 
         <nav id="navmenu" class="navmenu">
             <ul>
-                <li><a href="{% url 'index' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
-                <li><a href="{% url 'about-us' %}" class="{% if request.path == '/about-us/' %}active{% endif %}">About</a></li>
-                <li><a href="{% url 'features' %}" class="{% if request.path == '/features/' %}active{% endif %}">Features</a></li>
-                <li><a href="{% url 'contact-us' %}" class="{% if request.path == '/contact-us/' %}active{% endif %}">Contact</a></li>
+                <li><a href="{% url 'index' %}" class="nav-link {% if request.resolver_match.url_name == 'index' %}active{% endif %}">Home</a></li>
+                <li><a href="{% url 'about-us' %}" class="nav-link {% if request.resolver_match.url_name == 'about-us' %}active{% endif %}">About</a></li>
+                <li><a href="{% url 'features' %}" class="nav-link {% if request.resolver_match.url_name == 'features' %}active{% endif %}">Features</a></li>
+                <li><a href="{% url 'customer' %}" class="nav-link {% if request.resolver_match.url_name == 'customer' %}active{% endif %}">Reviews</a></li>
+                <li><a href="{% url 'contact-us' %}" class="nav-link {% if request.resolver_match.url_name == 'contact-us' %}active{% endif %}">Contact</a></li>
             </ul>
             <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>

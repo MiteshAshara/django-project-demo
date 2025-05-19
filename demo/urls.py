@@ -16,13 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
 
+from customers.views import (
+    index_view,
+    about_view,
+    features_view,
+    contact_view,
+    customer_list,
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TemplateView.as_view(template_name='index.html'), {'title': 'iLanding'}, name='index'),
-    path('about-us/', TemplateView.as_view(template_name='about.html'),  {'title': 'About | iLanding'},name='about-us'),
-    path('features/', TemplateView.as_view(template_name='features.html'), {'title': 'Features | iLanding'}, name='features'),
-    path('contact-us/', TemplateView.as_view(template_name='contact-us.html'),  {'title': 'Contact | iLanding'},name='contact-us'),
-]
+    path('', index_view, name='index'),
+    path('about-us/', about_view, name='about-us'),
+    path('features/', features_view, name='features'),
+    path('contact-us/', contact_view, name='contact-us'),
+    path('customer/', customer_list, name='customer'),
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -1,0 +1,18 @@
+version: '1.0'
+
+services:
+  django-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: demo-site-django:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=your-secret-key
+    volumes:
+      - .:/app
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on: []
+    # Add database service here if needed (e.g., mysql)

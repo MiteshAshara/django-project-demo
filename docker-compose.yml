@@ -1,13 +1,31 @@
 version: '3.8'
 
 services:
-  app:
+  django-app:
     build:
       context: .
-      dockerfile: docker/Dockerfile
+      dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "8000:8000"
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=django-insecure-1lgw@@(w3a98yz41wb#^*@0!jo1!qjcl0)63rls^&ogojb9w1^
+      - ALLOWED_HOSTS=localhost,127.0.0.1,*
+      # Use SQLite instead of MySQL for simplicity
+      - DB_ENGINE=django.db.backends.sqlite3
+      - DB_NAME=db.sqlite3
     volumes:
       - .:/app
-    environment:
-      - PYTHONUNBUFFERED=1
+    command: >
+      sh -c "
+        python manage.py migrate &&
+        python create_superuser.py &&
+        python manage.py runserver 0.0.0.0:8000
+      "
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  db_data:
