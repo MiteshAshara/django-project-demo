@@ -1,0 +1,61 @@
+{% extends 'master.html' %}
+{% load static %}
+
+{% block title %}Student List{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container mt-5 pt-5">
+    <div class="text-center mb-5">
+      <h1 class="text-secondary fw-bold">Student List</h1>
+    </div>
+
+    <!-- {% if students %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>DOB</th>
+                        <th>Gender</th>
+                        <th>City</th>
+                        <th>Mobile</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Pincode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ student.first_name }} {{ student.last_name }}</td>
+                        <td>{{ student.dob }}</td>
+                        <td>{{ student.get_gender_display }}</td>
+                        <td>{{ student.city }}</td>
+                        <td>{{ student.mobile }}</td>
+                        <td>{{ student.email }}</td>
+                        <td>{{ student.address }}</td>
+                        <td>{{ student.pincode }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-warning text-center">No students found.</div>
+        {% endif %} -->
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-4">
+        <div class="card text-white bg-primary">
+          <div class="card-body text-center">
+            <h5 class="card-title">Total Students</h5>
+            <p class="card-text display-6">{{ students|length }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
