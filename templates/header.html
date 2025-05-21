@@ -12,7 +12,6 @@
                 <li><a href="{% url 'about-us' %}" class="nav-link {% if request.resolver_match.url_name == 'about-us' %}active{% endif %}">About</a></li>
                 <li><a href="{% url 'features' %}" class="nav-link {% if request.resolver_match.url_name == 'features' %}active{% endif %}">Features</a></li>
                 <li><a href="{% url 'student-list' %}" class="nav-link {% if request.resolver_match.url_name == 'student-list' %}active{% endif %}">Students</a></li>
-                <!-- <li><a href="{% url 'api:student-list' %}" class="nav-link {% if request.resolver_match.url_name == 'api-student-list' %}active{% endif %}">API Students</a></li> -->
                 <li><a href="{% url 'customer' %}" class="nav-link {% if request.resolver_match.url_name == 'customer' %}active{% endif %}">Reviews</a></li>
                 <li><a href="{% url 'contact-us' %}" class="nav-link {% if request.resolver_match.url_name == 'contact-us' %}active{% endif %}">Contact</a></li>
             </ul>
