@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from .models import Customer
-from api.models import Student
 
 def index_view(request):
     return render(request, 'index.html', {'title': 'iLanding'})
@@ -21,10 +20,3 @@ def customer_list(request):
         'customers': customers
     }
     return render(request, 'customer.html', context)
-
-def student_list_view(request):
-    students = Student.objects.all()
-    return render(request, 'student_list.html', {
-        'title': 'Student List',
-        'students': students
-    })

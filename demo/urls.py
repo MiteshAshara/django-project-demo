@@ -25,7 +25,6 @@ from customers.views import (
     features_view,
     contact_view,
     customer_list,
-    student_list_view,
 )
 
 urlpatterns = [
@@ -35,7 +34,5 @@ urlpatterns = [
     path('features/', features_view, name='features'),
     path('contact-us/', contact_view, name='contact-us'),
     path('customer/', customer_list, name='customer'),
-    path('api/students/', include('api.urls')), 
     path('api/customer/', include('api.customer_urls')), 
-    path('students/', student_list_view, name='student-list'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -13,7 +13,7 @@ class Customer(models.Model):
     email = models.EmailField(default='')
     dob = models.DateField(default=timezone.now)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default='O')
-    phone_number = models.CharField(max_length=15, default='')
+    phone_number = models.CharField(max_length=10, default='')
     address = models.TextField(blank=True, null=True)
     city = models.CharField(max_length=100, default='')
     pincode = models.CharField(max_length=10, default='')
