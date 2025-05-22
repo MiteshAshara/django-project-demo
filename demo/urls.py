@@ -26,6 +26,8 @@ from customers.views import (
     contact_view,
     customer_list,
 )
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from .views import AddCustomerView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,5 +36,7 @@ urlpatterns = [
     path('features/', features_view, name='features'),
     path('contact-us/', contact_view, name='contact-us'),
     path('customer/', customer_list, name='customer'),
-    path('api/customer/', include('api.customer_urls')), 
+    path('api/customers/', include('api.customer_urls')), 
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
