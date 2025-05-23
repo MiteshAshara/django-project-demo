@@ -64,3 +64,7 @@ python manage.py migrate
 python manage.py createsuperuser
 python manage.py makemigrations students
 python manage.py migrate
+git commit --allow-empty -m "." && git push //push without commit
+git push -u origin customers-api
+git add .
+git commit -m "Add customer API with CRUD and success messages"
