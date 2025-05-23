@@ -44,7 +44,6 @@ class CustomerAPI(APIView):
             return Response(
                 {
                     "message": "Customer updated successfully!",
-                    "data": serializer.data
                 },
                 status=status.HTTP_200_OK
             )

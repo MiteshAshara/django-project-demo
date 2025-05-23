@@ -4,6 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from customers.models import Customer
+from api.serializers import CustomerSerializer
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -14,10 +16,3 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
-
-class AddCustomerView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        customer_data = request.data
-        return Response({"message": "Customer added successfully"}, status=status.HTTP_201_CREATED)
