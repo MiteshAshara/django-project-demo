@@ -6,35 +6,55 @@ from customers.models import Customer
 from .serializers import CustomerSerializer
 from django.views.generic import ListView
 
+
 class CustomerAPI(APIView):
     def get(self, request, pk=None):
         if pk:
             customer = get_object_or_404(Customer, pk=pk)
             serializer = CustomerSerializer(customer)
             return Response(serializer.data, status=status.HTTP_200_OK)
+
         customers = Customer.objects.all()
         serializer = CustomerSerializer(customers, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        if request.content_type != 'application/json':
+            return Response(
+                {"error": "Unsupported media type. Use 'application/json'."},
+                status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE
+            )
+
         serializer = CustomerSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(
+                {
+                    "message": "Customer added successfully!",
+                },
+                status=status.HTTP_201_CREATED
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, pk):
+    def put(self, request, pk=None):
         customer = get_object_or_404(Customer, pk=pk)
-        serializer = CustomerSerializer(customer, data=request.data, partial=True)
+        serializer = CustomerSerializer(customer, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(
+                {
+                    "message": "Customer updated successfully!",
+                    "data": serializer.data
+                },
+                status=status.HTTP_200_OK
+            )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
+    def delete(self, request, pk=None):
         customer = get_object_or_404(Customer, pk=pk)
         customer.delete()
         return Response({"message": "Customer deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+
 
 class CustomerListView(ListView):
     model = Customer

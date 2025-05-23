@@ -39,4 +39,5 @@ urlpatterns = [
     path('api/customers/', include('api.customer_urls')), 
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/', include('api.urls')),  # Include the API app's URLs
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
