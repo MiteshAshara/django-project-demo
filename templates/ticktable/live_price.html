@@ -47,7 +47,6 @@
                 </div>
                 <div class="card-footer">
                     <nav aria-label="Price history pagination" id="pagination-container">
-                        <!-- Pagination will be added dynamically -->
                     </nav>
                 </div>
             </div>
@@ -67,8 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
     let prices = [];
     let socket;
-    
-    // Function to format date and time
+   
     function formatDateTime(dateString) {
         const date = new Date(dateString);
         return {
@@ -78,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
     
-    // Function to fetch price history data
     function fetchPriceHistory(page = 1) {
         fetch(`/ticktable/api/price-history/?page=${page}`)
             .then(response => response.json())
@@ -86,10 +83,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 prices = data.prices;
                 totalRecords.textContent = `${data.total_entries} Records`;
                 
-                // Render table
                 renderPriceTable(prices);
                 
-                // Render pagination
                 renderPagination(data.current_page, data.total_pages);
                 
                 currentPage = data.current_page;
@@ -100,7 +95,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
     
-    // Function to render price table
     function renderPriceTable(prices) {
         if (prices.length === 0) {
             tableBody.innerHTML = `<tr><td colspan="5" class="text-center">No price data available</td></tr>`;
@@ -126,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
         tableBody.innerHTML = tableHtml;
     }
     
-    // Function to update seconds ago for all rows
+    
     function updateSecondsAgo() {
         const rows = tableBody.querySelectorAll('tr');
         const now = new Date();
@@ -140,7 +134,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Function to render pagination
     function renderPagination(currentPage, totalPages) {
         let paginationHtml = `
             <ul class="pagination justify-content-center mb-0">
@@ -169,8 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         
         paginationContainer.innerHTML = paginationHtml;
-        
-        // Add event listeners to pagination links
+      
         document.querySelectorAll('.page-link[data-page]').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -179,8 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
-    // Connect to WebSocket for live price updates
+
     function connectWebSocket() {
         socket = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@ticker');
         
@@ -213,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
     
-    // Function to save price to database
+  
     function savePrice(price) {
         savedIndicator.textContent = 'Saving...';
         savedIndicator.classList.remove('badge-success', 'badge-danger');
@@ -234,24 +225,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 savedIndicator.classList.remove('badge-warning', 'badge-danger');
                 savedIndicator.classList.add('badge-success');
                 
-                // If we're on the first page, update the table
                 if (currentPage === 1) {
-                    // Add the new price to the beginning of the array
+                 
                     prices.unshift({
                         id: data.id,
                         live_price: data.price,
                         timestamp: data.timestamp
                     });
                     
-                    // Remove the last item if we're at the limit
+                  
                     if (prices.length > 100) {
                         prices.pop();
                     }
-                    
-                    // Re-render the table
+                   
                     renderPriceTable(prices);
                     
-                    // Update total records
+                   
                     const current = parseInt(totalRecords.textContent.split(' ')[0]) || 0;
                     totalRecords.textContent = `${current + 1} Records`;
                 }
@@ -268,8 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
             savedIndicator.classList.add('badge-danger');
         });
     }
-    
-    // Helper function to get CSRF token
+  
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -285,14 +273,12 @@ document.addEventListener('DOMContentLoaded', function() {
         return cookieValue;
     }
     
-    // Initialize
+    
     fetchPriceHistory();
     connectWebSocket();
-    
-    // Update "seconds ago" every second
+   
     setInterval(updateSecondsAgo, 1000);
-    
-    // Refresh data every 30 seconds
+
     setInterval(() => {
         fetchPriceHistory(currentPage);
     }, 30000);

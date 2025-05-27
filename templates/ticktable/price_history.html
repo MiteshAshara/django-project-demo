@@ -54,7 +54,6 @@
                         </table>
                     </div>
 
-                    <!-- Pagination -->
                     {% if page_obj.has_other_pages %}
                     <nav aria-label="Page navigation">
                         <ul class="pagination justify-content-center">
@@ -96,26 +95,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const tableBody = document.getElementById('price-table-body');
     let countdownValue = 5;
     
-    // Function to update countdown
     function updateCountdown() {
         countdownValue -= 1;
         countdownDisplay.textContent = countdownValue;
         
         if (countdownValue <= 0) {
-            countdownValue = 5; // Reset countdown
+            countdownValue = 5; 
             fetchLatestPrice();
         }
     }
-    
-    // Function to fetch latest price
+ 
     function fetchLatestPrice() {
         fetch('/ticktable/api/get-latest-price/')
             .then(response => response.json())
             .then(data => {
-                // Update price display
+              
                 priceDisplay.textContent = data.price;
-                
-                // Update timestamp
+               
                 const now = new Date();
                 updateTimeDisplay.textContent = now.toLocaleString();
             })
@@ -123,25 +119,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error fetching price:', error);
             });
     }
-    
-    // Update countdown every second
+ 
     setInterval(updateCountdown, 1000);
     
-    // Initialize WebSocket for real-time updates
     const socket = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@ticker');
     
     socket.onmessage = function(event) {
         const data = JSON.parse(event.data);
         const price = parseFloat(data.c);
         
-        // Update live price display with current price
         priceDisplay.textContent = price.toFixed(10);
-        
-        // Update timestamp
+       
         const now = new Date();
         updateTimeDisplay.textContent = now.toLocaleString();
-        
-        // Reset countdown when we get real-time data
         countdownValue = 5;
     };
     
