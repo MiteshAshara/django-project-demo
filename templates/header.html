@@ -13,6 +13,7 @@
                 <li><a href="{% url 'features' %}" class="nav-link {% if request.resolver_match.url_name == 'features' %}active{% endif %}">Features</a></li>
                 <li><a href="{% url 'customer' %}" class="nav-link {% if request.resolver_match.url_name == 'customer' %}active{% endif %}">Reviews</a></li>
                 <li><a href="{% url 'contact-us' %}" class="nav-link {% if request.resolver_match.url_name == 'contact-us' %}active{% endif %}">Contact</a></li>
+                <li><a href="{% url 'ticktable:live_price' %}" class="nav-link {% if request.resolver_match.url_name == 'live_price' %}active{% endif %}">Live Price</a></li>
             </ul>
             <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
         </nav>
