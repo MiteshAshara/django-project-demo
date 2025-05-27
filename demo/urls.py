@@ -28,7 +28,19 @@ from customers.views import (
 )
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
+class DummyClass(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    def get(self, request):
+        return Response({"message": "This is a dummy class."})
+
 urlpatterns = [
+    path('dummy/', DummyClass.as_view(), name='dummy'),
     path('admin/', admin.site.urls),
     path('', index_view, name='index'),
     path('about-us/', about_view, name='about-us'),

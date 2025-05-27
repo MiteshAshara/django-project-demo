@@ -5,9 +5,15 @@ from rest_framework import status
 from customers.models import Customer
 from .serializers import CustomerSerializer
 from django.views.generic import ListView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
+class JWTAuthenticationViewBase(APIView):
+     permission_classes = [IsAuthenticated]
+    #  authentication_classes = [JWTAuthentication]
 
-class CustomerAPI(APIView):
+class CustomerAPI(JWTAuthenticationViewBase):
     def get(self, request, pk=None):
         if pk:
             customer = get_object_or_404(Customer, pk=pk)
