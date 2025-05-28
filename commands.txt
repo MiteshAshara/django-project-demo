@@ -68,3 +68,4 @@ git commit --allow-empty -m "." && git push //push without commit
 git push -u origin customers-api
 git add .
 git commit -m "Add customer API with CRUD and success messages"
+docker exec -it static-site-django-app-1 python manage.py shell -c "from django.contrib.admin.models import LogEntry; LogEntry.objects.all().delete()" //clear docker admin log history     
