@@ -50,5 +50,8 @@ def run_ticker():
     print("Connecting to Binance WebSocket API...")
     print("Press Ctrl+C to stop")
 
-    ws.run_forever()
-    # make command thoruogh run argument less manage.py.py runscript btc_price_monitor.py(41 to 51 line)
+    try:
+        ws.run_forever()
+    except KeyboardInterrupt:
+        ws.close()
+        print("Connection closed successfully")
