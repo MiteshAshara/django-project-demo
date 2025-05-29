@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'customers',
     'rest_framework',
     'api',
-    'ticktable'
+    'ticktable',
 ]
 
 MIDDLEWARE = [

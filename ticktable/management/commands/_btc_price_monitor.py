@@ -8,6 +8,8 @@ of BTC/USDT pair in the console.
 
 import websocket
 import json
+from ticktable.models import Tick
+from datetime import datetime
 
 def on_message(ws, message):
     """Handle incoming WebSocket messages."""
@@ -15,7 +17,13 @@ def on_message(ws, message):
     data = json.loads(message)
     if 'c' in data: 
         price = data['c']
+        timestamp = datetime.fromtimestamp(data.get('E', 0) / 1000)
         print(f"BTC/USDT: ${float(price):.10f}")
+        tick=Tick()
+        tick.live_price = price
+        tick.timestamp = timestamp
+        tick.script_id = 1  
+        tick.save()
 
 def on_error(ws, error):
     """Handle WebSocket errors."""
@@ -29,7 +37,7 @@ def on_open(ws):
     """Handle WebSocket connection open."""
     print("Connection established")
 
-if __name__ == "__main__":
+def run_ticker():
     socket = "wss://stream.binance.com:9443/ws/btcusdt@ticker"
    
     ws = websocket.WebSocketApp(socket,
@@ -42,3 +50,4 @@ if __name__ == "__main__":
     print("Press Ctrl+C to stop")
 
     ws.run_forever()
+    # make command thoruogh run argument less manage.py.py runscript btc_price_monitor.py(41 to 51 line)

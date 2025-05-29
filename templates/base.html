@@ -10,8 +10,6 @@
 
 <body>
 
-<!-- Add this right after the opening <body> tag or in your header section -->
-
 <div id="live-price-header" style="background-color: #343a40; color: #fff; padding: 10px 0; text-align: center;">
     <div class="container">
         <div class="row">
@@ -24,11 +22,9 @@
     </div>
 </div>
 
-<!-- Replace the simple table with an enhanced data table -->
 <div class="container mt-4">
     <div class="row">
         <div class="col-md-12">
-            <!-- Latest price card -->
             <div class="card mb-4">
                 <div class="card-header bg-primary text-white">
                     <h3 class="m-0">Latest Price Update</h3>
@@ -38,8 +34,7 @@
                     <p class="text-muted">Last updated: <span id="latest-update-time">--:--:--</span></p>
                 </div>
             </div>
-            
-            <!-- Price history table -->
+        
             <div class="card">
                 <div class="card-header bg-secondary text-white d-flex justify-content-between">
                     <h3 class="m-0">Price History</h3>
@@ -76,7 +71,6 @@
 </div>
 
 <script>
-    // Function to get CSRF token from cookies
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -92,7 +86,6 @@
         return cookieValue;
     }
     
-    // Function to store ALL price updates in database
     function storePriceInDatabase(price) {
         const saveStatus = document.getElementById('save-status');
         saveStatus.style.display = 'inline';
@@ -114,8 +107,7 @@
         .then(data => {
             console.log('Price stored in database:', data);
             saveStatus.textContent = '(Saved)';
-            
-            // Reset status message after 2 seconds
+           
             setTimeout(() => {
                 saveStatus.style.display = 'none';
                 saveStatus.textContent = '(Saving...)';
@@ -126,7 +118,7 @@
             saveStatus.textContent = '(Save failed)';
             saveStatus.style.color = 'red';
             
-            // Reset status message after 2 seconds
+            
             setTimeout(() => {
                 saveStatus.style.display = 'none';
                 saveStatus.style.color = 'white';
@@ -135,7 +127,7 @@
         });
     }
     
-    // Live price ticker with WebSocket connection - store EVERY update
+   
     document.addEventListener('DOMContentLoaded', function() {
         const headerPriceElement = document.getElementById('header-live-price');
         
@@ -145,11 +137,9 @@
             socket.onmessage = function(event) {
                 const data = JSON.parse(event.data);
                 const price = parseFloat(data.c);
-                
-                // Show full price with 10 decimal places
+               
                 headerPriceElement.textContent = price.toFixed(10);
-                
-                // Update color based on price change
+               
                 if (parseFloat(data.p) >= 0) {
                     headerPriceElement.classList.remove('text-danger');
                     headerPriceElement.classList.add('text-success');
@@ -158,7 +148,7 @@
                     headerPriceElement.classList.add('text-danger');
                 }
                 
-                // Store EVERY price update in database
+               
                 storePriceInDatabase(price);
             };
             
@@ -169,7 +159,7 @@
             socket.onclose = function() {
                 headerPriceElement.textContent = 'Disconnected';
                 
-                // Try to reconnect after delay
+              
                 setTimeout(function() {
                     location.reload();
                 }, 30000);
@@ -177,9 +167,9 @@
         }
     });
     
-    // Price table functionality
+   
     document.addEventListener('DOMContentLoaded', function() {
-        // Variables for price history table
+       
         const priceTableBody = document.getElementById('price-table-body');
         const paginationElement = document.getElementById('pagination');
         const recordCountElement = document.getElementById('record-count');
@@ -190,7 +180,6 @@
         let totalPages = 1;
         let priceData = [];
         
-        // Function to load price data
         function loadPriceData(page = 1) {
             fetch(`/ticktable/api/price-history/?page=${page}`)
                 .then(response => response.json())
@@ -199,16 +188,13 @@
                     currentPage = data.current_page;
                     totalPages = data.total_pages;
                     
-                    // Update record count
-                    recordCountElement.textContent = `${data.total_entries} Records`;
                     
-                    // Update table
+                    recordCountElement.textContent = `${data.total_entries} Records`;
+                   
                     updateTable();
                     
-                    // Update pagination
                     updatePagination();
                     
-                    // Update latest price display if needed
                     if (data.prices.length > 0) {
                         const latest = data.prices[0];
                         latestPriceDisplay.textContent = parseFloat(latest.live_price).toFixed(10);
@@ -227,20 +213,20 @@
                 });
         }
         
-        // Format timestamp to readable format
+       
         function formatTime(timestamp) {
             const date = new Date(timestamp);
             return date.toLocaleTimeString();
         }
         
-        // Calculate seconds ago from timestamp
+        
         function getSecondsAgo(timestamp) {
             const now = new Date();
             const then = new Date(timestamp);
             return Math.round((now - then) / 1000);
         }
         
-        // Update the price table
+       
         function updateTable() {
             if (priceData.length === 0) {
                 priceTableBody.innerHTML = `
@@ -273,11 +259,10 @@
             priceTableBody.innerHTML = tableHtml;
         }
         
-        // Update the pagination controls
+      
         function updatePagination() {
             let paginationHtml = '';
-            
-            // Previous button
+        
             paginationHtml += `
                 <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
                     <a class="page-link" href="#" data-page="1">&laquo; First</a>
@@ -286,8 +271,7 @@
                     <a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>
                 </li>
             `;
-            
-            // Page numbers
+       
             let startPage = Math.max(1, currentPage - 2);
             let endPage = Math.min(totalPages, startPage + 4);
             
@@ -298,8 +282,7 @@
                     </li>
                 `;
             }
-            
-            // Next button
+          
             paginationHtml += `
                 <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
                     <a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>
@@ -310,8 +293,7 @@
             `;
             
             paginationElement.innerHTML = paginationHtml;
-            
-            // Add click handlers to pagination links
+         
             document.querySelectorAll('#pagination .page-link').forEach(link => {
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -320,8 +302,7 @@
                 });
             });
         }
-        
-        // Update "seconds ago" values every second
+    
         function updateSecondsAgo() {
             document.querySelectorAll('.seconds-ago').forEach(cell => {
                 const timestamp = cell.getAttribute('data-timestamp');
@@ -330,26 +311,22 @@
             });
         }
         
-        // Initial data load
         loadPriceData();
-        
-        // Refresh data every 30 seconds
+     
         setInterval(() => {
             loadPriceData(currentPage);
         }, 30000);
         
-        // Update "seconds ago" every second
+      
         setInterval(updateSecondsAgo, 1000);
-        
-        // Hook into WebSocket price updates to refresh first page if needed
+       
         const existingOnMessage = socket.onmessage;
         socket.onmessage = function(event) {
-            // Call the existing handler
+          
             if (existingOnMessage) {
                 existingOnMessage.call(this, event);
             }
             
-            // If we're on the first page, refresh the data to show the new price
             if (currentPage === 1) {
                 loadPriceData(1);
             }

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.paginator import Paginator
-from .models import TickTable
+from .models import Tick
 from decimal import Decimal
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def live_price_view(request):
     """View to display the live price page"""
     # Get the latest price or a default value
-    latest_price = TickTable.objects.order_by('-timestamp').first()
+    latest_price = Tick.objects.order_by('-timestamp').first()
     context = {
         'latest_price': latest_price.live_price if latest_price else Decimal('0.0000000000')
     }
@@ -21,7 +21,7 @@ def live_price_view(request):
 def price_history_view(request):
     """View to display all price history in a table"""
     # Get all price records, ordered by timestamp (newest first)
-    prices = TickTable.objects.all().order_by('-timestamp')
+    prices = Tick.objects.all().order_by('-timestamp')
     
     # Implement pagination
     page_number = request.GET.get('page', 1)
@@ -47,7 +47,7 @@ def get_price_history(request):
         page = 1
         
     # Get all prices ordered by timestamp (newest first)
-    prices = TickTable.objects.all().order_by('-timestamp')
+    prices = Tick.objects.all().order_by('-timestamp')
     
     # Set up pagination
     paginator = Paginator(prices, 50)  # 50 items per page
@@ -85,7 +85,7 @@ def update_price(request):
             new_price = Decimal(str(data.get('price', '0')))
             
             # Always store the price, no filtering
-            price_entry = TickTable.objects.create(live_price=new_price)
+            price_entry = Tick.objects.create(live_price=new_price)
             logger.info(f"Stored new price: {new_price}")
             return JsonResponse({
                 'status': 'success', 
@@ -103,7 +103,7 @@ def update_price(request):
 
 def get_latest_price(request):
     """API endpoint to get the latest price"""
-    latest_price = TickTable.objects.order_by('-timestamp').first()
+    latest_price = Tick.objects.order_by('-timestamp').first()
     if latest_price:
         return JsonResponse({'price': str(latest_price.live_price)})
     return JsonResponse({'price': '0.0000000000'})
