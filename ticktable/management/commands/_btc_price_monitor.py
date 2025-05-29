@@ -10,6 +10,7 @@ import websocket
 import json
 from ticktable.models import Tick
 from datetime import datetime
+from django.utils import timezone
 
 def on_message(ws, message):
     """Handle incoming WebSocket messages."""
@@ -17,7 +18,7 @@ def on_message(ws, message):
     data = json.loads(message)
     if 'c' in data: 
         price = data['c']
-        timestamp = datetime.fromtimestamp(data.get('E', 0) / 1000)
+        timestamp = timezone.make_aware(datetime.fromtimestamp(data.get('E', 0) / 1000))
         print(f"BTC/USDT: ${float(price):.10f}")
         tick=Tick()
         tick.live_price = price
