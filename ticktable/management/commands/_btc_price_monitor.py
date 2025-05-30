@@ -38,8 +38,8 @@ def on_open(ws):
     """Handle WebSocket connection open."""
     print("Connection established")
 
-def run_ticker():
-    socket = "wss://stream.binance.com:9443/ws/btcusdt@ticker"
+def run_ticker(token):
+    socket = f"wss://stream.binance.com:9443/ws/{token}@ticker"
    
     ws = websocket.WebSocketApp(socket,
                               on_open=on_open,
@@ -47,7 +47,6 @@ def run_ticker():
                               on_error=on_error,
                               on_close=on_close)
     
-    print("Connecting to Binance WebSocket API...")
     print("Press Ctrl+C to stop")
 
     try:
