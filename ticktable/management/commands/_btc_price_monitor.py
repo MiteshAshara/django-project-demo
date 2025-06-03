@@ -12,6 +12,8 @@ from ticktable.models import Tick
 from datetime import datetime
 from django.utils import timezone
 
+script_local = None
+
 def on_message(ws, message):
     """Handle incoming WebSocket messages."""
     # print(message)
@@ -19,11 +21,11 @@ def on_message(ws, message):
     if 'c' in data: 
         price = data['c']
         timestamp = timezone.make_aware(datetime.fromtimestamp(data.get('E', 0) / 1000))
-        print(f"BTC/USDT: ${float(price):.10f}")
+        print(f"{script_local.name} ${float(price):.10f}")
         tick=Tick()
         tick.live_price = price
         tick.timestamp = timestamp
-        tick.script_id = 1  
+        tick.script_id = script_local.pk  
         tick.save()
 
 def on_error(ws, error):
@@ -38,9 +40,11 @@ def on_open(ws):
     """Handle WebSocket connection open."""
     print("Connection established")
 
-def run_ticker(token):
-    socket = f"wss://stream.binance.com:9443/ws/{token}@ticker"
-   
+def run_ticker(script):
+    global script_local
+    script_local = script
+    # socket = f"wss://stream.binance.com:9443/ws/{script.token}"
+    socket = f"wss://stream.binance.com:9443/ws/{script.token.lower()}"
     ws = websocket.WebSocketApp(socket,
                               on_open=on_open,
                               on_message=on_message,
