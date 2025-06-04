@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 from ._btc_price_monitor import run_ticker
 from ticktable.models import Script 
-import argparse
 
 # def validate_script_id(value):
 #     try:
@@ -30,28 +29,42 @@ class Command(BaseCommand):
             nargs='+', 
             type=int,
             dest='list',
-            required=True, #required for the script to run
+            required=True, 
             help='ID of the script to monitor (must be a positive integer)'
         )
-
-    def handle(self, *args, **options):
-        # print(options['script_id'])
-        # script_id = options['script_id'][0]
-        script_ids = options['list']
-        for script_id in script_ids:
-            try:
-                script = Script.objects.get(id=script_id)
-                print(script.name)
-                # print(script.token)
-                run_ticker(script)
-                self.stdout.write(self.style.SUCCESS(f'Loaded script: {script}'))
-            except Script.DoesNotExist:
-                self.stdout.write(self.style.ERROR(f'Script with {script_id} not found'))
-                return 
+    def store_data(data, script):
+         if not data or 'c' not in data:
+            return
+            
+    # def handle(self, *args, **options):
+    #     # print(options['script_id'])
+    #     script_ids = options['list']
+    #     for script_id in script_ids:
+    #         try:
+    #             script = Script.objects.get(id=script_id)
+    #             print(script.name)
+    #             # print(script.token)
+    #             run_ticker(script)
+    #             self.stdout.write(self.style.SUCCESS(f'Loaded script: {script}'))
+    #         except Script.DoesNotExist:
+    #             self.stdout.write(self.style.ERROR(f'Script with {script_id} not found'))
+    #             return
         
-        message = options['message']
-        self.stdout.write(
-            self.style.SUCCESS(f'Hey, {message}') 
-        )
+        # message = options['message']
+        # self.stdout.write(
+        #     self.style.SUCCESS(f'Hey, {message}') 
+        # )
         #run_ticker('enausdt')
         # run_ticker(script)
+    def handle(self, *args, **options):
+        script_ids = options['list']
+        scripts = list(Script.objects.filter(pk__in=script_ids))
+
+        if not scripts:
+            self.stdout.write(self.style.ERROR("No scripts found for the provided IDs."))
+            return
+
+        for script in scripts:
+            self.stdout.write(self.style.SUCCESS(f"{script.name}"))
+    
+        run_ticker(scripts)

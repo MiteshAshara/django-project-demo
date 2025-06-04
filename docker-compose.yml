@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  django-app:
+  django-ticker:
     build:
       context: .
       dockerfile: Dockerfile
@@ -18,7 +18,7 @@ services:
       - DB_HOST=mysql
       - DB_PORT=3306
     volumes:
-      - .:/app
+      - .:/ticker
     command: >
       sh -c "
         pip install -r requirements.txt &&
