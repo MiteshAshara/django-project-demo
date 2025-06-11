@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 FROM python:3.10-slim AS base-system
 
 WORKDIR /app
@@ -23,22 +22,18 @@ RUN pip install --upgrade pip setuptools wheel
 
 # Use the official Python image
 FROM base-system
-=======
-# Use the official Python image
-FROM python:3.10-slim
->>>>>>> 21e99be94c5c928088a88799f4e286fa8e77dec1
 
 # Set the working directory
 WORKDIR /app
 
 # Copy the requirements file and install dependencies
 COPY requirements.txt /app/
-<<<<<<< HEAD
+
 RUN pip install --no-cache-dir -r requirements.txt || \
     (echo "Error installing Django. Check requirements.txt for valid version." && exit 1)
-=======
+
 RUN pip install --no-cache-dir -r requirements.txt
->>>>>>> 21e99be94c5c928088a88799f4e286fa8e77dec1
+
 
 # Copy the project files
 COPY . /app/
