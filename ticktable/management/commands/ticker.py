@@ -28,7 +28,7 @@ class Command(BaseCommand):
             # default=5,
             nargs='+', 
             type=int,
-            dest='list',
+            # dest='list',
             required=True, 
             help='ID of the script to monitor (must be a positive integer)'
         )
@@ -57,7 +57,8 @@ class Command(BaseCommand):
         #run_ticker('enausdt')
         # run_ticker(script)
     def handle(self, *args, **options):
-        script_ids = options['list']
+        self.stdout.write(self.style.SUCCESS("Hey"))
+        script_ids = options['script_id']
         scripts = list(Script.objects.filter(pk__in=script_ids))
 
         if not scripts:
@@ -66,5 +67,5 @@ class Command(BaseCommand):
 
         for script in scripts:
             self.stdout.write(self.style.SUCCESS(f"{script.name}"))
-    
+        # script=Script.objects.get(pk=5)
         run_ticker(scripts)

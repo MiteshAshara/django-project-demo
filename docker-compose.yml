@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  django-ticker:
+  django-app:
     build:
       context: .
       dockerfile: Dockerfile
@@ -18,7 +18,7 @@ services:
       - DB_HOST=mysql
       - DB_PORT=3306
     volumes:
-      - .:/ticker
+      - .:/app
     command: >
       sh -c "
         pip install -r requirements.txt &&
@@ -31,6 +31,90 @@ services:
         condition: service_healthy
     networks:
       - app-network
+
+  django-ticker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=django-insecure-1lgw@@(w3a98yz41wb#^*@0!jo1!qjcl0)63rls^&ogojb9w1^
+      - ALLOWED_HOSTS=localhost,127.0.0.1,*
+      - DB_ENGINE=django.db.backends.mysql
+      - DB_NAME=djangodb
+      - DB_USER=djangouser
+      - DB_PASSWORD=djangopass
+      - DB_HOST=mysql
+      - DB_PORT=3306
+    volumes:
+      - .:/app
+    command: "python manage.py ticker --script_id 5 6 7"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  rabbitmq:
+    restart: always
+    image: rabbitmq:3.8-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - "5672"
+    environment:
+      RABBITMQ_DEFAULT_VHOST: "/"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+    networks:
+      - app-network
+
+  celery-app-1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .dev.env
+    volumes:
+      - .:/app
+    depends_on:
+      - rabbitmq
+      - mysql
+    command: celery -A demo worker -l info
+    networks:
+      - app-network
+  
+  # celery-app-2:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   env_file:
+  #     - .dev.env
+  #   volumes:
+  #     - .:/app
+  #   depends_on:
+  #     - rabbitmq
+  #     - mysql
+  #   command: celery -A demo worker -l info
+  #   networks:
+  #     - app-network
+
+  # celery-app-3:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   env_file:
+  #     - .dev.env
+  #   volumes:
+  #     - .:/app
+  #   depends_on:
+  #     - rabbitmq
+  #     - mysql
+  #   command: celery -A demo worker -l info
+  #   networks:
+  #     - app-network
+  
 
   phpmyadmin:
     image: phpmyadmin:5.2.1

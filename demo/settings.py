@@ -162,3 +162,9 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=3), 
     # 'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
 }
+# Celery
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672/'
+# Celery Configuration Options
+CELERY_TIMEZONE = "UTC"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
